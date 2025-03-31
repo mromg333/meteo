@@ -6,11 +6,11 @@
  ---
  ## Κατάλληλες Περίοδοι για Σπορά και Ψεκασμό
 
- ![image2](jece.png)
+ ![image2](images/jece.png)
  ---
  ## Συσσώρευση Βλάστησης 
- ![image3](monthly_GDD.png)
+ ![image3](images/monthly_GDD.png)
  ---
  ## Ανάλυση της Εποχικότητας 
- ![image5](seasonal_trends_temperature.png)
- ![image4](seasonal_decomposition_temperature.png)
+ ![image5](images/seasonal_trends_temperature.png)
+ ![image4](images/seasonal_decomposition_temperature.png)
