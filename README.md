@@ -1,1 +1,16 @@
-[ergasia1.md](https://github.com/user-attachments/files/19528819/ergasia1.md)
+# Μετεωρολογία και Ψηφιακά Συστήματα
+ Η παρούσα εργασία έχει ως στόχο τη μελέτη το καιρικών φαινομένων και πώς αυτές επιδρούν στις καλλιέργειες
+ ## 'Ωρες Ψύχους ανά μήνα
+ Συνολικές ώρες ψύχους που παρατηρήθηκαν κατά τη διάρεκια του 2022-2025 
+ ![image1](chilling.png)
+ ---
+ ## Κατάλληλες Περίοδοι για Σπορά και Ψεκασμό
+
+ ![image2](jece.png)
+ ---
+ ## Συσσώρευση Βλάστησης 
+ ![image3](monthly_GDD.png)
+ ---
+ ## Ανάλυση της Εποχικότητας 
+ ![image5](seasonal_trends_temperature.png)
+ ![image4](seasonal_decomposition_temperature.png)
