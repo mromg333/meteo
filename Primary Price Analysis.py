@@ -35,7 +35,7 @@ for idx, (column, (ylabel, color)) in enumerate(metrics.items()):
     ax.legend()
     ax.grid(True)
 plt.suptitle('Ανάλυση Πρωτογενή Τιμών')
-axes[-1].set_xlabel('Μεσος Ορος', fontsize=12)
+axes[-1].set_xlabel('Μεσος Ορος Ανά Μήνα', fontsize=12)
 plt.xticks(range(1, 13))
 plt.tight_layout()
 #plt.savefig('data.png')
