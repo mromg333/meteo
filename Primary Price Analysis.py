@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np 
 import sys
 
 sys.stdout.reconfigure(encoding='utf-8')
@@ -29,11 +30,11 @@ for idx, (column, (ylabel, color)) in enumerate(metrics.items()):
         if not filtered_data.empty:
             monthly_avg = filtered_data.groupby('Month')[column].mean()
             ax.plot(monthly_avg.index, monthly_avg.values, label=str(year), color=colors[year-2022], linestyle=['-', '--', ':'][year % 3])
-    
+        
+       
     ax.set_ylabel(ylabel, fontsize=12)
     ax.legend(title='Έτος')
     ax.grid(True)
-
 plt.suptitle('Ανάλυση Πρωτογενή Τιμών')
 axes[-1].set_xlabel('Μέσος Όρος Ανά Μήνα', fontsize=12)
 plt.xticks(range(1, 13))
@@ -41,3 +42,4 @@ plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 fig.subplots_adjust(hspace=0.01)
 # plt.savefig('data.png')
 plt.show()
+
