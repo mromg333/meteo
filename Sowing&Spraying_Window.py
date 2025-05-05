@@ -2,7 +2,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import sys
-
 sys.stdout.reconfigure(encoding='utf-8')
 csv_file = "2022_2025.csv"
 df = pd.read_csv(csv_file, sep=',', encoding='utf-8', header=0, low_memory=False)
