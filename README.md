@@ -59,9 +59,9 @@
 Οι τιμές αυτές καταχωρήθηκαν τόσο σε ετήσια όσο και σε μηνιαία βάση, επιτρέποντας τη λεπτομερή παρακολούθηση της ψυχρής περιόδου μέσα στον χρόνο.
  </br>
  
- ![image2](images/Chilling_Hours_Monthly.png)
+ ![image2](images/Chilling_Hours_Monthly_New.png)
  
- ![image3](images/Chilling_Hours_Yearly.png)
+ ![image3](images/Chilling_Hours_Yearly_New.png)
 
  ---
  ## Κατάλληλες Περίοδοι για Σπορά και Ψεκασμό
@@ -99,11 +99,11 @@
 
 
 
- ![image6](images/GDD_PET_Yearly.png)
- ![image7](images/GDD_PET_Monthly.png)
+ ![image8](images/GDD_PET_Yearly.png)
+ ![image9](images/GDD_PET_Monthly.png)
 
 ## PET Predictions
-![image8](images/PET_Prediction.png)
+![image10](images/PET_Prediction.png)
 
  ---
 </div>
