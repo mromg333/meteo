@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+cd /home/vtsiveleidis/meteo
+python3 sowing_spraying.py
+cp *.png /var/www/html/2025/agrometeo
