@@ -172,3 +172,6 @@ plot_conditions(sowing_results, 'sowing')
 
 spraying_results = process_conditions(varieties, 'spraying')
 plot_conditions(spraying_results, 'spraying')
+
+
+plt.savefig("sowing_spraying.png")
