@@ -59,6 +59,7 @@ $$
  
  ![image3](images/Chilling_Hours_Yearly_New.png)
 
+https://www.farm.novagreen.gr/ores-psychoys-chilling-hours/
  
  ## Κατάλληλες Περίοδοι για Σπορά και Ψεκασμό
  
