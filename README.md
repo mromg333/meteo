@@ -57,7 +57,7 @@ $$
  
  ![image2](images/Chilling_Hours_Monthly_New.png)
  
- ![image3](images/Chilling_Hours_Yearly_New.png)
+ ![image3](images/Chill_Yearly.png)
 
 
 
@@ -88,8 +88,8 @@ $$
 
 ## Σπορά και Ψεκασμό Predictions
 
-![image6](images/Sowing_Prediction.png)
-![image7](images/Spraying_Prediction.png)
+![image6](images/sowing_pred.png)
+![image7](images/spraying_pred.png)
 
 
  ## Συσσώρευση Βλάστησης      
@@ -104,7 +104,7 @@ $$
  ![image9](images/GDD_PET_Monthly.png)
 
 ## PET Predictions
-![image10](images/PET_Prediction.png)
+![image10](images/pet_pred.png)
 
  ---
 </div>
