@@ -99,7 +99,6 @@ def plot_pet_suitability(variety_results):
     ax.set_yticklabels(varieties_pet.keys(), color='white')
     ax.set_xticks(range(0, len(times), 6))
     ax.set_xticklabels([times[i] for i in range(0, len(times), 6)], color='white')
-    ax.set_xlabel('Ώρα', color='white')
 
     legend_patches = [
         mpatches.Patch(color=colors[2], label='Κατάλληλο'),
