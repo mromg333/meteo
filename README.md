@@ -64,7 +64,8 @@ $$
 | Maria Bianca           |	908                   |940                              | 908 | 1107 |
 | Lolita                 |559                    |940                              |908 | 1107 |
 |Plagold10               |446                    |940                              |908 | 1107 | 
-<br>[^1] </br>
+
+[^1] 
 [^1]: [Ποικιλίες ροδακίνων](https://www.farm.novagreen.gr/ores-psychoys-chilling-hours/)
 
  
@@ -112,4 +113,5 @@ $$
 ![image10](images/pet_pred.png)
 
  ---
+ ###Βιβλιογραφία
 </div>
