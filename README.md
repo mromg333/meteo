@@ -92,6 +92,7 @@ $$
 
 
 ## Προβλέψεις για Σπορά και Ψεκσασμό
+ Με τη βοήθεια μελλοντικών προβλέψεων για  τις μετρήσεις της θερμοκρασίας, ταχύτητας ανέμου, σχετικής υγρασία και βροχόπτωσης μπορούμε να καθορίσουμε τις κατάλληλες ώρες που μπορεί να πραγματοποιηθεί η Σπόρα και Ο Ψεκασμός. Συγκεκριμένα για κάθε μία από τις εικονιζόμενες ποικιλίες ροδακινιών 
 
 ![image6](images/sowing_pred.png)
 ![image7](images/spraying_pred.png)
@@ -150,5 +151,6 @@ $$
  [^1]: [Ποικιλίες ροδακίνων](https://www.farm.novagreen.gr/ores-psychoys-chilling-hours/)
  [^2]: [GDD](https://en.wikipedia.org/wiki/Growing_degree-day)
  [^3]: [PET](https://en.wikipedia.org/wiki/Penman%E2%80%93Monteith_equation)
+ [^4]: [Soil_Moisture(https://en.wikipedia.org/wiki/Thornthwaite_climate_classification)
  
 </div>
