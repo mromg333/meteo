@@ -143,7 +143,7 @@ $$
 
  ![image8](images/GDD_PET_Yearly.png)
  ![image9](images/GDD_PET_Monthly.png)
-
+[^6] [^5][^4] [^3] [^2] [^1]
 ## Προβλέψεις για το PET
 ![image10](images/pet_pred.png)          
 ## Ευχαριστίες
