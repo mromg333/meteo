@@ -162,5 +162,6 @@ $$
  [^3]: [PET](https://en.wikipedia.org/wiki/Penman%E2%80%93Monteith_equation)
  [^4]: [Soil_Moisture](https://en.wikipedia.org/wiki/Thornthwaite_climate_classification)
   [^5]: [Prunus Persica](https://link.springer.com/chapter/10.1007/978-0-387-77491-6_10)
+  [^6]: [Growing-Spraying Requirements](https://extension.usu.edu/yardandgarden/research/peaches-in-the-garden)
  
 </div>
