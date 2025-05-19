@@ -160,8 +160,8 @@ $$
  [^1]: [Ποικιλίες ροδακίνων](https://www.farm.novagreen.gr/ores-psychoys-chilling-hours/)
  [^2]: [GDD](https://en.wikipedia.org/wiki/Growing_degree-day)
  [^3]: [PET](https://en.wikipedia.org/wiki/Penman%E2%80%93Monteith_equation)
- [^4]: [Soil_Moisture](https://en.wikipedia.org/wiki/Thornthwaite_climate_classification)
-  [^5]: [Prunus Persica](https://link.springer.com/chapter/10.1007/978-0-387-77491-6_10)
-  [^6]: [Growing-Spraying Requirements](https://extension.usu.edu/yardandgarden/research/peaches-in-the-garden)
+ [^4]: [Soil_Moisture 1](https://en.wikipedia.org/wiki/Thornthwaite_climate_classification)
+ [^5]: [Soil_Moisture 2](http://www.gaiapedia.gr/gaiapedia/index.php/%CE%A5%CE%B3%CF%81%CE%B1%CF%83%CE%AF%CE%B1_%CE%B5%CE%B4%CE%AC%CF%86%CE%BF%CF%85%CF%82)
+ [^6]: [Growing-Spraying Requirements](https://extension.usu.edu/yardandgarden/research/peaches-in-the-garden)
  
-</div>
+
