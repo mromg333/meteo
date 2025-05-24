@@ -48,7 +48,7 @@ $$
 - $W$   η ταχύτητα του ανέμου.
  
 Η ομαδοποίηση σε μηνιαία σύνολα επέτρεψε την επιλογή της βέλτιστης εβδομάδας κάθε μήνα, προσφέροντας μια πιο στοχευμένη και πρακτική σύνοψη των κλιματικών συνθηκών. Αυτή η μεθοδολογία διευκολύνει την οπτικοποίηση της εποχικότητας και την εξαγωγή χρήσιμων συμπερασμάτων για δραστηριότητες που εξαρτώνται από τις καιρικές συνθήκες τις οποίες μπορείτε να [δείτε εδώ.](https://mromg333.github.io/meteo/Link/127.0.0.1.html)
-
+[^7]
 ## 'Ωρες Ψύχους ανά μήνα
 
 Για κάθε χρονική περίοδο, υπολογίστηκε το πλήθος των ωρών κατά τις οποίες η θερμοκρασία βρισκόταν κάτω από το όριο των 7,2°C, προσδιορίζοντας έτσι τις συνολικές ώρες ψύχους ανά έτος.
@@ -173,5 +173,5 @@ $$
  [^4]: [Soil_Moisture 1](https://en.wikipedia.org/wiki/Thornthwaite_climate_classification)
  [^5]: [Soil_Moisture 2](http://www.gaiapedia.gr/gaiapedia/index.php/%CE%A5%CE%B3%CF%81%CE%B1%CF%83%CE%AF%CE%B1_%CE%B5%CE%B4%CE%AC%CF%86%CE%BF%CF%85%CF%82)
  [^6]: [Growing-Spraying Requirements](https://extension.usu.edu/yardandgarden/research/peaches-in-the-garden)
- 
+  [^7]: [Discomfort_Index](https://www.jeeng.net/pdf-144092-70092?filename=Heat+Stress+Analysis.pdf)
 
