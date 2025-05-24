@@ -1,75 +1,158 @@
-import numpy as np
 import pandas as pd
+import plotly.graph_objects as go
 import plotly.express as px
 
-csv_file = "2022_2025.csv"
-df = pd.read_csv(csv_file, sep=',', encoding='utf-8', header=0, low_memory=False)
 
-columns_map = {
+df = pd.read_csv("2022_2025.csv", sep=',', encoding='utf-8', low_memory=False)
+
+
+df.rename(columns={
     'Timestamp[s]': 'Unix_time',
     'Temp_Out[degC]': 'Temperature',
-    'THWS_Index[degC]': 'Feels_Like',
-    'Wind_Speed[m/s]': 'Wind_Speed'
-}
-df.rename(columns=columns_map, inplace=True)
+    'Hum_Out[%]': 'RH'
+}, inplace=True)
 
-cols_to_convert = ['Unix_time', 'Temperature', 'Feels_Like', 'Wind_Speed']
-for col in cols_to_convert:
-    df[col] = pd.to_numeric(df[col], errors='coerce')
-df = df.dropna(subset=cols_to_convert)
+
+df = df[['Year', 'Month', 'Day', 'Hour', 'Minute', 'Temperature', 'RH']].dropna()
+df[['Temperature', 'RH']] = df[['Temperature', 'RH']].apply(pd.to_numeric, errors='coerce')
+df.dropna(inplace=True)
+
 
 df['Date'] = pd.to_datetime(df[['Year', 'Month', 'Day', 'Hour', 'Minute']])
-df.sort_values('Date', inplace=True)
-df.reset_index(drop=True, inplace=True)
-df['Week'] = df['Date'].dt.to_period('W').dt.start_time
-
-weekly = df.groupby('Week').agg({
-    'Temperature': 'mean',
-    'Wind_Speed': 'mean'
-}).reset_index()
-
-weekly['Month'] = weekly['Week'].dt.to_period('M').astype(str)
-
-ideal_temp = 20
-
-weekly['Score'] = abs(weekly['Temperature'] - ideal_temp) + weekly['Wind_Speed']
+df['Day_Date'] = df['Date'].dt.floor('D')  # Κόβουμε ώρα για να έχουμε ημερομηνία μόνο
+df['Month_Period'] = df['Date'].dt.to_period('M')
 
 
-def best_week_temp(group):
-    group = group.copy()
-    group['Temp_Diff'] = abs(group['Temperature'] - ideal_temp)
-    best = group.loc[group['Temp_Diff'].idxmin()]
-    return best
-
-best_week_by_month = weekly.groupby('Month', group_keys=False).apply(best_week_temp).reset_index(drop=True)
+daily_avg_temp = df.groupby('Day_Date')['Temperature'].mean().rename('T_mean')
+daily_avg_rh = df.groupby('Day_Date')['RH'].mean().rename('RH_mean')
 
 
+daily_stats = pd.merge(daily_avg_temp.reset_index(), daily_avg_rh.reset_index(), on='Day_Date')
+df = df.merge(daily_avg_temp.reset_index(), on='Day_Date', how='left')
+# Discomfort Index 
+df['DI'] = df['T_mean'] - (0.55 * (1 - 0.01 * df['RH']) * (df['T_mean'] - 14.5))
+#Based on real time Humitidy and median temp
 
-weekly['Hover_Info'] = "Εβδομάδα: " + weekly['Week'].astype(str) + \
-                       "<br>Temp: " + weekly['Temperature'].round(1).astype(str) + "°C" + \
-                       "<br>Wind: " + weekly['Wind_Speed'].round(1).astype(str) + " m/s" + \
-                       "<br>Score: " + weekly['Score'].round(1).astype(str)
-
-best_week_by_month['Hover_Info'] = "Καλύτερη εβδομάδα του μήνα " + best_week_by_month['Month'] + \
-                                   "<br>Εβδομάδα: " + best_week_by_month['Week'].astype(str) + \
-                                   "<br>Temp: " + best_week_by_month['Temperature'].round(1).astype(str) + "°C" + \
-                                   "<br>Wind: " + best_week_by_month['Wind_Speed'].round(1).astype(str) + " m/s" + \
-                                   "<br>Score: " + best_week_by_month['Score'].round(1).astype(str)
+def mode_di(series):
+    modes = series.mode()
+    return modes.iloc[0] if not modes.empty else None
 
 
-fig = px.scatter(weekly, x='Week', y='Score',
-                 hover_data=['Hover_Info'],
-                 title='Καλύτερες Εβδομάδες (Βάσει Θερμοκρασίας και Ανέμου)',
-                 labels={'Score': 'Score (|Temp-20| + Wind_Speed)', 'Week': 'Εβδομάδα'},
-                 color_discrete_sequence=['gray'])
+daily_mode_di = df.groupby('Day_Date')['DI'].apply(mode_di).rename('DI_mode').reset_index()
 
-fig.add_scatter(x=best_week_by_month['Week'], y=best_week_by_month['Score'],
-                mode='lines+markers',
-                marker=dict(color='red', size=12, symbol='circle'),
-                name='Καλύτερη εβδομάδα ανά μήνα',
-                hovertext=best_week_by_month['Hover_Info'],
-                hoverinfo='text')
 
-fig.update_layout(hovermode='closest')
+daily_di = pd.merge(daily_stats, daily_mode_di, on='Day_Date')
+daily_di['Year'] = daily_di['Day_Date'].dt.year
+daily_di['Month_Period'] = daily_di['Day_Date'].dt.to_period('M')
+
+
+best_days = daily_di.loc[daily_di.groupby(['Year', 'Month_Period'])['DI_mode'].idxmin()]
+
+
+fig = go.Figure()
+years = sorted(daily_di['Year'].unique())
+colors = px.colors.qualitative.Set3
+
+for i, year in enumerate(years):
+    data = daily_di[daily_di['Year'] == year]
+    fig.add_trace(go.Scatter(
+        x=data['Day_Date'],
+        y=data['DI_mode'],
+        mode='lines+markers',
+        name=f'Επικρατούσα Τιμή DI όλης της ημέρας {year}',
+        marker=dict(color=colors[i % len(colors)]),
+        hovertext=(
+            "Ημερομηνία: " + data['Day_Date'].astype(str) +
+            "<br>Μέση Θερμοκρασία: " + data['T_mean'].round(1).astype(str) + " °C" +
+            "<br>Μέση Υγρασία: " + data['RH_mean'].round(1).astype(str) + " %" +
+            "<br>Επικρατούσα Τιμή DI : " + data['DI_mode'].round(2).astype(str) + " °C"
+        ),
+        hoverinfo='text'
+    ))
+
+    best = best_days[best_days['Year'] == year]
+    fig.add_trace(go.Scatter(
+        x=best['Day_Date'],
+        y=best['DI_mode'],
+        mode='markers',
+        name=f'Καλύτερη Ημέρα {year}',
+        marker=dict(symbol='circle-open', size=12, color='red'),
+        hovertext=(
+            "Ημερομηνία: " + best['Day_Date'].astype(str) +
+            "<br>Μέση Θερμοκρασία: " + best['T_mean'].round(1).astype(str) + " °C" +
+            "<br>Μέση Υγρασία: " + best['RH_mean'].round(1).astype(str) + " %" +
+            "<br>Επικρατούσα Τιμή DI : " + best['DI_mode'].round(2).astype(str) + " °C"
+        ),
+        hoverinfo='text'
+    ))
+
+fig.update_layout(
+    title="Καλύτερη ημέρα του μήνα (Βάσει Δείκτη Δυσφορίας - Επικρατούσα Τιμή DI)",
+    xaxis_title="Ημερομηνία",
+    yaxis_title="Δείκτης Δυσφορίας (Discomfort Index - DI) [°C]",
+    height=600,
+    width=1000
+    
+)
+
+# WORKING SOLUTION - RUNS WITHOUT ERRORS
+
+# 1. First make sure we have a figure
+if 'fig' not in locals():
+    fig = go.Figure()  # Creates figure if one doesn't exist
+
+# 2. Add D labels INSIDE the plot area
+d_levels = {21: 'D1', 24: 'D2', 27: 'D3', 29: 'D4', 32: 'D5'}
+
+for y, label in d_levels.items():
+    # Add horizontal line
+    fig.add_hline(
+        y=y,
+        line=dict(color='blue', width=1, dash='dot'),
+        opacity=0.3
+    )
+    
+    # Add label inside plot
+    fig.add_annotation(
+        x=0.01,  # 1% from left edge (0-1 range)
+        y=y,
+        text=label,
+        xref='paper',  # Use relative coordinates
+        yref='y',     # Use actual y-values
+        showarrow=False,
+        font=dict(color='blue', size=14),
+        bgcolor='white',
+        bordercolor='blue',
+        borderwidth=1,
+        xanchor='left'
+    )
+
+# Add the DI legend box (keeps all existing plot elements intact)
+fig.add_annotation(
+    x=1.69,  # Right side outside plot
+    y=0.01,   # Vertical center
+    width=400,
+    xref="paper",
+    yref="paper",
+    text=(
+        "<b> Range of Discomfort Index(DI) </b><br>"
+        "DI < 21: No discomfort<br>"
+        "21 ≤ DI < 24: Less than 50% of the population feels discomfort<br>"
+        "24 ≤ DI < 27: More than 50% of the population feels discomfort<br>"
+        "27 ≤ DI < 29: All feel discomfort<br>"
+        "29 ≤ DI < 32: All feel discomfort and stress<br>"
+        "DI ≥ 32: Emergency medical state"
+    ),
+    showarrow=False,
+    align="left",
+    bordercolor="gray",
+    borderwidth=1,
+    bgcolor="white",
+    font=dict(size=9)
+)
+
+ 
+
 fig.show()
+fig.write_html("diagrama_di.html")
 
