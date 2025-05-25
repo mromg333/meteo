@@ -58,7 +58,7 @@ for i, year in enumerate(years):
     fig.add_trace(go.Scatter(
         x=data['Day_Date'],
         y=data['DI_mode'],
-        mode='lines+markers',
+        mode='markers',
         name=f'Επικρατούσα Τιμή DI όλης της ημέρας {year}',
         marker=dict(color=colors[i % len(colors)]),
         hovertext=(
@@ -75,7 +75,8 @@ for i, year in enumerate(years):
         x=best['Day_Date'],
         y=best['DI_mode'],
         mode='markers',
-        name=f'Καλύτερη Ημέρα {year}',
+        name='Καλύτερη Ημέρα του μήνα',
+           showlegend=(i == 0),
         marker=dict(symbol='circle-open', size=12, color='red'),
         hovertext=(
             "Ημερομηνία: " + best['Day_Date'].astype(str) +
@@ -95,30 +96,30 @@ fig.update_layout(
     
 )
 
-# WORKING SOLUTION - RUNS WITHOUT ERRORS
 
-# 1. First make sure we have a figure
+
+
 if 'fig' not in locals():
-    fig = go.Figure()  # Creates figure if one doesn't exist
+    fig = go.Figure()  
 
-# 2. Add D labels INSIDE the plot area
+
 d_levels = {21: 'D1', 24: 'D2', 27: 'D3', 29: 'D4', 32: 'D5'}
 
 for y, label in d_levels.items():
-    # Add horizontal line
+   
     fig.add_hline(
         y=y,
         line=dict(color='blue', width=1, dash='dot'),
         opacity=0.3
     )
     
-    # Add label inside plot
+   
     fig.add_annotation(
-        x=0.01,  # 1% from left edge (0-1 range)
+        x=0.01,  
         y=y,
         text=label,
-        xref='paper',  # Use relative coordinates
-        yref='y',     # Use actual y-values
+        xref='paper',  
+        yref='y',     
         showarrow=False,
         font=dict(color='blue', size=14),
         bgcolor='white',
@@ -127,21 +128,21 @@ for y, label in d_levels.items():
         xanchor='left'
     )
 
-# Add the DI legend box (keeps all existing plot elements intact)
+
 fig.add_annotation(
-    x=1.69,  # Right side outside plot
-    y=0.01,   # Vertical center
+    x=1.69,  
+    y=0.01,   
     width=400,
     xref="paper",
     yref="paper",
     text=(
-        "<b> Range of Discomfort Index(DI) </b><br>"
-        "DI < 21: No discomfort<br>"
-        "21 ≤ DI < 24: Less than 50% of the population feels discomfort<br>"
-        "24 ≤ DI < 27: More than 50% of the population feels discomfort<br>"
-        "27 ≤ DI < 29: All feel discomfort<br>"
-        "29 ≤ DI < 32: All feel discomfort and stress<br>"
-        "DI ≥ 32: Emergency medical state"
+        "<b>Εύρος Δείκτη Δυσφορίας(DI) </b><br>"
+        "DI < 21:Καμία δυσφορία<br>"
+        "21 ≤ DI < 24:Λιγότερο από το 50% του πληθυσμού νιώθει δυσφορία<br>"
+        "24 ≤ DI < 27:Περισσότερο από το 50% του πληθυσμού νιώθει δυσφορία<br>"
+        "27 ≤ DI < 29:΄Ολοι  νιώθουν δυσφορία<br>"
+        "29 ≤ DI < 32:΄Ολοι νιώθουν δυσφορία και στρες<br>"
+        "DI ≥ 32:Επείγουσα ανάγκη ιατρικής περίθαλψης"
     ),
     showarrow=False,
     align="left",
@@ -155,4 +156,3 @@ fig.add_annotation(
 
 fig.show()
 fig.write_html("diagrama_di.html")
-
