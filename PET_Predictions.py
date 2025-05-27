@@ -3,13 +3,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import sys
+import pyet
 
 sys.stdout.reconfigure(encoding='utf-8')
 
+# Φόρτωση δεδομένων
 df = pd.read_csv("https://greendigital.uth.gr/data/prediction.csv", encoding='utf-8')
 
+# Μετατροπή χρόνου
 df['Date'] = pd.to_datetime(df['DateTime'])
 
+# Μετονομασίες στηλών για ευκολία
 df = df.rename(columns={
     'Temp_Out[degC]': 'Temperature',
     'Wind_Speed[m/s]': 'Wind_Speed',
@@ -17,20 +21,42 @@ df = df.rename(columns={
     'RelHum[%]': 'Hum_Out[%]'
 })
 
+# Μετατροπή σε αριθμητικές τιμές
 df['Rain[mm]'] = pd.to_numeric(df['Rain[mm]'], errors='coerce').fillna(0)
 df['Hum_Out[%]'] = pd.to_numeric(df['Hum_Out[%]'], errors='coerce').fillna(0)
 df['Temperature'] = pd.to_numeric(df['Temperature'], errors='coerce')
 df['Wind_Speed'] = pd.to_numeric(df['Wind_Speed'], errors='coerce')
+
+# Πίεση σε kPa
+df['Pressure[Pa]'] = df['Pressure[Pa]'].fillna(101300)  # συμπλήρωση ελλειπόντων με τυπική πίεση
+df['Pressure_kPa'] = df['Pressure[Pa]'] / 1000
+
+# Ημερολογιακές πληροφορίες
+df['doy'] = df['Date'].dt.dayofyear  # day of year
+
+# Αφαίρεση σειρών με NaN σε σημαντικά πεδία
 df = df.dropna(subset=['Temperature', 'Wind_Speed'])
 
-# Calculate PET (same as in monthly_GDD.py)
-def calculate_pet(row):
-    #Simplified PET calculation, replace with your accurate method if available
-    return max(0, 0.408 * 0.5 * row['Temperature']) #Placeholder: PET related to Temperature
+# Μετατροπή ακτινοβολίας σε MJ/m²/h (από W/m²)
+df['Rn'] = df['GHI[W/m2]'] * 3600 / 1e6
+df['Rn'] = df['Rn'].fillna(0)
 
-df['PET'] = df.apply(calculate_pet, axis=1)
+# Ορισμός γεωγραφικών στοιχείων
+latitude_deg = 39.63
+altitude = 70
 
-# 2. PET Suitability Definition for Peach Varieties
+# Υπολογισμός PET vectorized με pyet.pm_fao56
+df['PET'] = pyet.pm_fao56(
+    tmean=df['Temperature'],
+    wind=df['Wind_Speed'],
+    rn=df['Rn'],
+    rh=df['Hum_Out[%]'],
+    elevation=altitude,
+    pressure=df['Pressure_kPa']
+)
+
+
+# Ορισμός ranges καταλληλότητας PET για ποικιλίες ροδάκινου
 varieties_pet = {
     "Red Haven": {
         'PET': [
@@ -55,14 +81,14 @@ varieties_pet = {
     }
 }
 
-# 3. Suitability Rating Function (adapted)
+# Συνάρτηση αξιολόγησης καταλληλότητας PET
 def rate_pet(pet_value, pet_ranges):
     for i, (low, high) in enumerate(pet_ranges):
         if low <= pet_value <= high:
             return i
     return 0  # Default to unsuitable
 
-# 4. Process PET Conditions
+# Υπολογισμός αξιολογήσεων για όλες τις ποικιλίες
 def process_pet_conditions(varieties_pet, df):
     variety_results = {}
     for name, pet_ranges in varieties_pet.items():
@@ -75,25 +101,25 @@ def process_pet_conditions(varieties_pet, df):
 
 pet_results = process_pet_conditions(varieties_pet, df)
 
-# 5. Plotting Function (adapted from plot_conditions)
+# Σχεδίαση αποτελεσμάτων καταλληλότητας PET
 def plot_pet_suitability(variety_results):
-    colors = ['#e74c3c', '#f1c40f', '#2ecc71']
+    colors = ['#e74c3c', '#f1c40f', '#2ecc71']  # κόκκινο, κίτρινο, πράσινο
     fig, ax = plt.subplots(figsize=(12, 4))
     fig.patch.set_facecolor('#1e1e1e')
     ax.set_facecolor('#1e1e1e')
     ax.set_title('Καταλληλότητα PET για Ροδακινιές', color='white')
+
     times = df['Date'].dt.strftime('%d\n%H').tolist()
     days = df['Date'].dt.date.tolist()
 
-    times = df['Date'].dt.strftime('%d\n%H').tolist()
     for i, (name, pet_list) in enumerate(variety_results.items()):
         for j, pet_rating in enumerate(pet_list):
             ax.barh(y=i, width=1, left=j, color=colors[pet_rating], edgecolor='none')
-    
-    for idx in range(1, len(days)):
-        if days[idx] != days[idx - 1] and days[idx] in days[idx+1:]:
-            ax.axvline(x=idx, color='white', linestyle='--', linewidth=0.8)
 
+    # Γραμμές διαχωρισμού ημερών
+    for idx in range(1, len(days)):
+        if days[idx] != days[idx - 1]:
+            ax.axvline(x=idx, color='white', linestyle='--', linewidth=0.8)
 
     ax.set_yticks(range(len(varieties_pet)))
     ax.set_yticklabels(varieties_pet.keys(), color='white')
@@ -113,3 +139,4 @@ def plot_pet_suitability(variety_results):
     plt.savefig("pet_pred")
 
 plot_pet_suitability(pet_results)
+
