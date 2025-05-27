@@ -5,7 +5,7 @@ import sys
 sys.stdout.reconfigure(encoding='utf-8')
 
 csv_file = "2022_2025.csv"
-df = pd.read_csv(csv_file, sep=',', encoding='utf-8', header=0, low_memory=False)
+df = pd.read_csv(csv_file, sep=',', encoding='utf-8', header=0, low_memory=False, na_values=["", " ", "N/A", "null", "-", "missing"])
 
 columns_map = {
     'Timestamp[s]': 'Unix_time',
@@ -26,6 +26,9 @@ df.reset_index(drop=True, inplace=True)
 df['Hour'] = df['Date'].dt.floor('h')
 
 hourly_avg_temp = df.groupby('Hour')['Temperature'].mean()
+hourly_avg_temp = hourly_avg_temp.dropna()
+print(f"Αγνοήθηκαν {hourly_avg_temp.isna().sum()} NaN τιμές στη μέση ωριαία θερμοκρασία.")
+
 
 chilling_hours = hourly_avg_temp.apply(lambda x: 1 if 0 <= x <= 7.2 else 0)
 chilling_hours = chilling_hours.to_frame(name='Chilling_Hour')
@@ -47,7 +50,7 @@ for bar in bars_month:
 
 plt.xlabel("Μήνας")
 plt.ylabel("Συνολικές Ώρες Ψύχους")
-plt.title("Chilling Hours Ανά Μήνα (Σύνολο για όλα τα έτη)")
+plt.title("Ώρες Ψύχους Ανά Μήνα (Σύνολο για όλα τα έτη)")
 plt.xticks(range(1, 13), ["Ιαν", "Φεβ", "Μαρ", "Απρ", "Μάι", "Ιουν", "Ιουλ", "Αυγ", "Σεπ", "Οκτ", "Νοε", "Δεκ"])
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 plt.tight_layout()
@@ -75,9 +78,32 @@ for bar in bars_season:
                  textcoords="offset points",
                  ha='center', va='bottom', fontsize=9)
 
-plt.xlabel("Χειμερινή Περίοδος")
+
+vars = {
+    "Maria Bianca": 908,
+    "Lolita": 559,
+    "Plagold10": 446
+}
+
+
+for name, chill_req in vars.items():
+    plt.axhline(y=chill_req, linestyle='--', linewidth=1.2, color='black')
+    plt.text(
+        x=len(chilling_hours_by_season.index) - 0.5,
+        y=chill_req + 10,
+        s=f"{name}: {chill_req} ώρες",
+        color='black',
+        fontsize=9,
+        ha='right',
+        va='bottom',
+        alpha=0.7
+    )
+
+plt.xlabel("Σύνολο Ώρων Ψύχους για κάθε Χειμερινή Περίοδο ")
 plt.ylabel("Συνολικές Ώρες Ψύχους")
 plt.xticks(rotation=45)
 plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.title("Χειμερινoί Περίοδοι")
 plt.tight_layout()
 plt.show()
+
