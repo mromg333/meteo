@@ -19,7 +19,7 @@ df.dropna(inplace=True)
 
 
 df['Date'] = pd.to_datetime(df[['Year', 'Month', 'Day', 'Hour', 'Minute']])
-df['Day_Date'] = df['Date'].dt.floor('D')  # Κόβουμε ώρα για να έχουμε ημερομηνία μόνο
+df['Day_Date'] = df['Date'].dt.floor('D')  
 df['Month_Period'] = df['Date'].dt.to_period('M')
 
 
@@ -28,25 +28,23 @@ daily_avg_rh = df.groupby('Day_Date')['RH'].mean().rename('RH_mean')
 
 
 daily_stats = pd.merge(daily_avg_temp.reset_index(), daily_avg_rh.reset_index(), on='Day_Date')
+
+
 df = df.merge(daily_avg_temp.reset_index(), on='Day_Date', how='left')
+df = df.merge(daily_avg_rh.reset_index(), on='Day_Date', how='left')  
+
 # Discomfort Index 
-df['DI'] = df['T_mean'] - (0.55 * (1 - 0.01 * df['RH']) * (df['T_mean'] - 14.5))
-#Based on real time Humitidy and median temp
+df['DI'] = df['T_mean'] - (0.55 * (1 - 0.01 * df['RH_mean']) * (df['T_mean'] - 14.5))
 
-def mode_di(series):
-    modes = series.mode()
-    return modes.iloc[0] if not modes.empty else None
+#Based on median Humitidy and median temp
 
-
-daily_mode_di = df.groupby('Day_Date')['DI'].apply(mode_di).rename('DI_mode').reset_index()
-
-
-daily_di = pd.merge(daily_stats, daily_mode_di, on='Day_Date')
+daily_di = daily_stats.copy()
+daily_di['DI'] = daily_di['T_mean'] - (0.55 * (1 - 0.01 * daily_di['RH_mean']) * (daily_di['T_mean'] - 14.5))
 daily_di['Year'] = daily_di['Day_Date'].dt.year
 daily_di['Month_Period'] = daily_di['Day_Date'].dt.to_period('M')
 
 
-best_days = daily_di.loc[daily_di.groupby(['Year', 'Month_Period'])['DI_mode'].idxmin()]
+best_days = daily_di.loc[daily_di.groupby(['Year', 'Month_Period'])['DI'].idxmin()]
 
 
 fig = go.Figure()
@@ -57,15 +55,15 @@ for i, year in enumerate(years):
     data = daily_di[daily_di['Year'] == year]
     fig.add_trace(go.Scatter(
         x=data['Day_Date'],
-        y=data['DI_mode'],
+        y=data['DI'],
         mode='markers',
-        name=f'Επικρατούσα Τιμή DI όλης της ημέρας {year}',
+        name=f'Δείκτης Δυσφορίας όλης της ημέρας {year}',
         marker=dict(color=colors[i % len(colors)]),
         hovertext=(
             "Ημερομηνία: " + data['Day_Date'].astype(str) +
             "<br>Μέση Θερμοκρασία: " + data['T_mean'].round(1).astype(str) + " °C" +
             "<br>Μέση Υγρασία: " + data['RH_mean'].round(1).astype(str) + " %" +
-            "<br>Επικρατούσα Τιμή DI : " + data['DI_mode'].round(2).astype(str) + " °C"
+            "<br>Τιμή DI : " + data['DI'].round(2).astype(str) + " °C"
         ),
         hoverinfo='text'
     ))
@@ -73,7 +71,7 @@ for i, year in enumerate(years):
     best = best_days[best_days['Year'] == year]
     fig.add_trace(go.Scatter(
         x=best['Day_Date'],
-        y=best['DI_mode'],
+        y=best['DI'],
         mode='markers',
         name='Καλύτερη Ημέρα του μήνα',
            showlegend=(i == 0),
@@ -82,13 +80,13 @@ for i, year in enumerate(years):
             "Ημερομηνία: " + best['Day_Date'].astype(str) +
             "<br>Μέση Θερμοκρασία: " + best['T_mean'].round(1).astype(str) + " °C" +
             "<br>Μέση Υγρασία: " + best['RH_mean'].round(1).astype(str) + " %" +
-            "<br>Επικρατούσα Τιμή DI : " + best['DI_mode'].round(2).astype(str) + " °C"
+            "<br> Τιμή DI : " + best['DI'].round(2).astype(str) + " °C"
         ),
         hoverinfo='text'
     ))
 
 fig.update_layout(
-    title="Καλύτερη ημέρα του μήνα (Βάσει Δείκτη Δυσφορίας - Επικρατούσα Τιμή DI)",
+    title="Καλύτερη ημέρα του μήνα (Βάσει Δείκτη Δυσφορίας -  Τιμή DI)",
     xaxis_title="Ημερομηνία",
     yaxis_title="Δείκτης Δυσφορίας (Discomfort Index - DI) [°C]",
     height=600,
