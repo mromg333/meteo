@@ -116,7 +116,7 @@ for y, label in d_levels.items():
 
 
 fig.add_annotation(
-    x=1.69,
+    x=1.67,
     y=0.01,
     width=400,
     xref="paper",
@@ -135,7 +135,7 @@ fig.add_annotation(
     bordercolor="gray",
     borderwidth=1,
     bgcolor="white",
-    font=dict(size=9)
+    font=dict(size=8.5)
 )
 
 
