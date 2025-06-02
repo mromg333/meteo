@@ -19,24 +19,21 @@ df.dropna(inplace=True)
 
 
 df['Date'] = pd.to_datetime(df[['Year', 'Month', 'Day', 'Hour', 'Minute']])
-df['Day_Date'] = df['Date'].dt.floor('D')  
+df['Day_Date'] = df['Date'].dt.floor('D')
 df['Month_Period'] = df['Date'].dt.to_period('M')
 
-
+# Median
 daily_avg_temp = df.groupby('Day_Date')['Temperature'].mean().rename('T_mean')
 daily_avg_rh = df.groupby('Day_Date')['RH'].mean().rename('RH_mean')
 
-
+# Creates new columns in dataset
 daily_stats = pd.merge(daily_avg_temp.reset_index(), daily_avg_rh.reset_index(), on='Day_Date')
-
-
 df = df.merge(daily_avg_temp.reset_index(), on='Day_Date', how='left')
-df = df.merge(daily_avg_rh.reset_index(), on='Day_Date', how='left')  
+df = df.merge(daily_avg_rh.reset_index(), on='Day_Date', how='left')
 
-# Discomfort Index 
+# Discomfort index formula
 df['DI'] = df['T_mean'] - (0.55 * (1 - 0.01 * df['RH_mean']) * (df['T_mean'] - 14.5))
 
-#Based on median Humitidy and median temp
 
 daily_di = daily_stats.copy()
 daily_di['DI'] = daily_di['T_mean'] - (0.55 * (1 - 0.01 * daily_di['RH_mean']) * (daily_di['T_mean'] - 14.5))
@@ -44,9 +41,9 @@ daily_di['Year'] = daily_di['Day_Date'].dt.year
 daily_di['Month_Period'] = daily_di['Day_Date'].dt.to_period('M')
 
 
-best_days = daily_di.loc[daily_di.groupby(['Year', 'Month_Period'])['DI'].idxmin()]
+worst_days = daily_di.loc[daily_di.groupby(['Year', 'Month_Period'])['DI'].idxmax()]
 
-
+# Main Graph
 fig = go.Figure()
 years = sorted(daily_di['Year'].unique())
 colors = px.colors.qualitative.Set3
@@ -68,56 +65,47 @@ for i, year in enumerate(years):
         hoverinfo='text'
     ))
 
-    best = best_days[best_days['Year'] == year]
+    worst = worst_days[worst_days['Year'] == year]
     fig.add_trace(go.Scatter(
-        x=best['Day_Date'],
-        y=best['DI'],
+        x=worst['Day_Date'],
+        y=worst['DI'],
         mode='markers',
-        name='Καλύτερη Ημέρα του μήνα',
-           showlegend=(i == 0),
+        name='Χειρότερη Ημέρα του μήνα',
+        showlegend=(i == 0),
         marker=dict(symbol='circle-open', size=12, color='red'),
         hovertext=(
-            "Ημερομηνία: " + best['Day_Date'].astype(str) +
-            "<br>Μέση Θερμοκρασία: " + best['T_mean'].round(1).astype(str) + " °C" +
-            "<br>Μέση Υγρασία: " + best['RH_mean'].round(1).astype(str) + " %" +
-            "<br> Τιμή DI : " + best['DI'].round(2).astype(str) + " °C"
+            "Ημερομηνία: " + worst['Day_Date'].astype(str) +
+            "<br>Μέση Θερμοκρασία: " + worst['T_mean'].round(1).astype(str) + " °C" +
+            "<br>Μέση Υγρασία: " + worst['RH_mean'].round(1).astype(str) + " %" +
+            "<br> Τιμή DI : " + worst['DI'].round(2).astype(str) + " °C"
         ),
         hoverinfo='text'
     ))
 
+
 fig.update_layout(
-    title="Καλύτερη ημέρα του μήνα (Βάσει Δείκτη Δυσφορίας -  Τιμή DI)",
+    title="Χειρότερη ημέρα του μήνα (Βάσει Δείκτη Δυσφορίας -  Τιμή DI)",
     xaxis_title="Ημερομηνία",
     yaxis_title="Δείκτης Δυσφορίας (Discomfort Index - DI) [°C]",
     height=600,
     width=1000
-    
 )
 
-
-
-
-if 'fig' not in locals():
-    fig = go.Figure()  
-
-
+# Levels of DI in the graph
 d_levels = {21: 'D1', 24: 'D2', 27: 'D3', 29: 'D4', 32: 'D5'}
 
 for y, label in d_levels.items():
-   
     fig.add_hline(
         y=y,
         line=dict(color='blue', width=1, dash='dot'),
         opacity=0.3
     )
-    
-   
     fig.add_annotation(
-        x=0.01,  
+        x=0.01,
         y=y,
         text=label,
-        xref='paper',  
-        yref='y',     
+        xref='paper',
+        yref='y',
         showarrow=False,
         font=dict(color='blue', size=14),
         bgcolor='white',
@@ -128,19 +116,19 @@ for y, label in d_levels.items():
 
 
 fig.add_annotation(
-    x=1.69,  
-    y=0.01,   
+    x=1.69,
+    y=0.01,
     width=400,
     xref="paper",
     yref="paper",
     text=(
         "<b>Εύρος Δείκτη Δυσφορίας(DI) </b><br>"
-        "DI < 21:Καμία δυσφορία<br>"
-        "21 ≤ DI < 24:Λιγότερο από το 50% του πληθυσμού νιώθει δυσφορία<br>"
-        "24 ≤ DI < 27:Περισσότερο από το 50% του πληθυσμού νιώθει δυσφορία<br>"
-        "27 ≤ DI < 29:΄Ολοι  νιώθουν δυσφορία<br>"
-        "29 ≤ DI < 32:΄Ολοι νιώθουν δυσφορία και στρες<br>"
-        "DI ≥ 32:Επείγουσα ανάγκη ιατρικής περίθαλψης"
+        "DI < 21: Καμία δυσφορία<br>"
+        "21 ≤ DI < 24: Λιγότερο από το 50% του πληθυσμού νιώθει δυσφορία<br>"
+        "24 ≤ DI < 27: Περισσότερο από το 50% του πληθυσμού νιώθει δυσφορία<br>"
+        "27 ≤ DI < 29: Όλοι νιώθουν δυσφορία<br>"
+        "29 ≤ DI < 32: Όλοι νιώθουν δυσφορία και στρες<br>"
+        "DI ≥ 32: Επείγουσα ανάγκη ιατρικής περίθαλψης"
     ),
     showarrow=False,
     align="left",
@@ -150,7 +138,7 @@ fig.add_annotation(
     font=dict(size=9)
 )
 
- 
 
 fig.show()
 fig.write_html("diagrama_di.html")
+
