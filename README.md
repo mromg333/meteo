@@ -173,7 +173,7 @@ $$
 - **P**:Βροχόπτωση (mm),
 - **PET**: Δυνητική εξατμισοδιαπνοή σε χιλιοστά (mm)([αναλύεται παραπάνω](#Συσσώρευση-Βλάστησης)).
  
-[^4] [^8] [^4]
+
 ![image6](images/sowing_pred.png)
 ![image7](images/spraying_pred.png)
 
@@ -182,7 +182,7 @@ $$
 
 
 
-[^6] [^5]
+ [^8] [^4] [^9]
 ## Προβλέψεις για το PET
 Με τη λήψη μετρήσεων από δεδομένα προβλέψεων μπορούμε να υπολογίσουμε την τιμή της Δυνητικής Εξατμισοδιαπνοής (PET).
 
@@ -219,8 +219,8 @@ $$
 * Pandas , για την επεξεργασία δεδομένων 
 * Matplotlib , για τη δημιουργία γραφημάτων 
 * Sys , για επεξεργασία ειδικών χαρακτήρων 
-* Pyet  , για τον υπολογισμό του PET με μικρότερη ακρίβεια 
-* Pyeto , για τον υπολογισμό του PET με μεγάλη ακρίβεια
+* Pyet  , για τον υπολογισμό του PET με (close source)
+* Pyeto , για τον υπολογισμό του PET με (open source)
 * Plotly , για τη δημιουργία διαδραστικών γραφημάτων
 
 ### Βιβλιογραφία
@@ -229,7 +229,6 @@ $$
  [^3]: [PET](https://en.wikipedia.org/wiki/Penman%E2%80%93Monteith_equation)
  [^4]: [Pyeto](https://pyeto.readthedocs.io/en/latest/)
  [^5]: [Pyet](https://pyet.readthedocs.io/en/latest/)
- [^6]: [Growing-Spraying Requirements](https://extension.usu.edu/yardandgarden/research/peaches-in-the-garden)
   [^7]: [Discomfort_Index](https://www.jeeng.net/pdf-144092-70092?filename=Heat+Stress+Analysis.pdf)
   [^8]: [Soilmoisture](https://www.uni-trier.de/fileadmin/fb6/prof/PHY/Diverse_Bildmaterialien/Homepage/Personen/Casper_Markus/Understanding_the_water_balance_and_its_estimation_methods.pdf?utm_source=chatgpt.com)
   [^9]: [Soil_Moisture 1](https://en.wikipedia.org/wiki/Thornthwaite_climate_classification)
