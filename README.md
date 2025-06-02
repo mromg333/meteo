@@ -190,10 +190,10 @@ $$
 
 Με αυτόν τον τρόπο μπορούμε να καθορίσουμε την καταλληλότητα των συνθηκών για την ανάπτυξη της κάθε ποικιλίας, εντοπίζοντας τις ώρες κατά τις οποίες το PET βρίσκεται εντός των βέλτιστων ορίων και επομένως οι συνθήκες είναι ευνοϊκές για την καλλιέργεια.
 
-Από αυτόν τον [τύπο του PET](#Συσσώρευση-Βλάστησης), χρησιμοποιήσαμε τη βιβλιοθήκη Pyet με FAO-56 Penman-Monteith.
-Τα στοιχεία που χρησιμοποιούμε 
+Από αυτόν τον τύπο του PET, χρησιμοποιήσαμε τη βιβλιοθήκη Pyet με FAO-56 Penman-Monteith.
+<br> Τα στοιχεία που χρησιμοποιούμε είναι:
 
-είναι:
+
 
 *   Η μέση θερμοκρασία του αέρα (°C)
 *   Η ταχύτητα του ανέμου (m/s)
@@ -232,5 +232,5 @@ $$
   [^7]: [Discomfort_Index](https://www.jeeng.net/pdf-144092-70092?filename=Heat+Stress+Analysis.pdf)
   [^8]: [Soilmoisture](https://www.uni-trier.de/fileadmin/fb6/prof/PHY/Diverse_Bildmaterialien/Homepage/Personen/Casper_Markus/Understanding_the_water_balance_and_its_estimation_methods.pdf?utm_source=chatgpt.com)
   [^9]: [Soil_Moisture 1](https://en.wikipedia.org/wiki/Thornthwaite_climate_classification)
-   
+   [^10]: Για το PET κάθε ποικιλίας ροδάκινων και για την καταλληλότητα κάθε ποικιλίας σχετικά με τη σπόρα και το ψεκασμό οι τιμές αντλήθηκαν μέσω CHATGPT
 
