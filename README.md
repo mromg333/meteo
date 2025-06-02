@@ -173,7 +173,7 @@ $$
 - **P**:Βροχόπτωση (mm),
 - **PET**: Δυνητική εξατμισοδιαπνοή σε χιλιοστά (mm)([αναλύεται παραπάνω](#Συσσώρευση-Βλάστησης)).
  
-[^4] [^8]
+[^4] [^8] [^4]
 ![image6](images/sowing_pred.png)
 ![image7](images/spraying_pred.png)
 
@@ -202,7 +202,7 @@ $$
 *   Το υψόμετρο (m)
 *   Την ατμοσφαιρική πίεση (kPa)
 
-![image10](images/pet_pred.png)          
+![image10](images/pet_pred.png)     [^5]       
 ## Ευχαριστίες και Καταμερισμός της εργασίας
 Σε αυτό  το σημείο θα θέλαμε να εκφράσουμε τις θερμές μας ευχαριστίες στον επιβλέποντα καθηγητή μας, κ. Χαραλάμπους Ονούφριο , για την πολύτιμη καθοδήγηση, την υποστήριξη και τις χρήσιμες παρατηρήσεις του καθ’ όλη τη διάρκεια της εκπόνησης της παρούσας εργασίας καθώς και για την παροχή  των μετεωρολογικών  δεδομένων. 
  <br>Ο καταμερισμός της εργασίας ανά κεφάλαιο έγινε ως εξής:<br>
@@ -227,11 +227,11 @@ $$
  [^1]: [Ποικιλίες ροδακίνων](https://www.farm.novagreen.gr/ores-psychoys-chilling-hours/)
  [^2]: [GDD](https://en.wikipedia.org/wiki/Growing_degree-day)
  [^3]: [PET](https://en.wikipedia.org/wiki/Penman%E2%80%93Monteith_equation)
- [^4]: [Soil_Moisture 1](https://en.wikipedia.org/wiki/Thornthwaite_climate_classification)
- [^5]: [Soil_Moisture 2](http://www.gaiapedia.gr/gaiapedia/index.php/%CE%A5%CE%B3%CF%81%CE%B1%CF%83%CE%AF%CE%B1_%CE%B5%CE%B4%CE%AC%CF%86%CE%BF%CF%85%CF%82)
+ [^4]: [Pyeto](https://pyeto.readthedocs.io/en/latest/)
+ [^5]: [Pyet](https://pyet.readthedocs.io/en/latest/)
  [^6]: [Growing-Spraying Requirements](https://extension.usu.edu/yardandgarden/research/peaches-in-the-garden)
   [^7]: [Discomfort_Index](https://www.jeeng.net/pdf-144092-70092?filename=Heat+Stress+Analysis.pdf)
   [^8]: [Soilmoisture](https://www.uni-trier.de/fileadmin/fb6/prof/PHY/Diverse_Bildmaterialien/Homepage/Personen/Casper_Markus/Understanding_the_water_balance_and_its_estimation_methods.pdf?utm_source=chatgpt.com)
-  [^9]
-   [^10]
+  [^9]: [Soil_Moisture 1](https://en.wikipedia.org/wiki/Thornthwaite_climate_classification)
+   
 
