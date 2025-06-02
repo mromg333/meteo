@@ -101,7 +101,7 @@ $$
 
 ![image4](images/Sowing_Spraying_Yearly.png)
 ![image5](images/Sowing_Spraying_Monthly.png)
-
+  [^11]
 
  ## Συσσώρευση Βλάστησης      
  
@@ -224,13 +224,13 @@ $$
 * Plotly , για τη δημιουργία διαδραστικών γραφημάτων
 
 ### Βιβλιογραφία
- [^1]: [Ποικιλίες ροδακίνων](https://www.farm.novagreen.gr/ores-psychoys-chilling-hours/)
- [^2]: [GDD](https://en.wikipedia.org/wiki/Growing_degree-day)
- [^3]: [PET](https://en.wikipedia.org/wiki/Penman%E2%80%93Monteith_equation)
- [^4]: [Pyeto](https://pyeto.readthedocs.io/en/latest/)
- [^5]: [Pyet](https://pyet.readthedocs.io/en/latest/)
+  [^1]: [Ποικιλίες ροδακίνων](https://www.farm.novagreen.gr/ores-psychoys-chilling-hours/)
+  [^2]: [GDD](https://en.wikipedia.org/wiki/Growing_degree-day)
+  [^3]: [PET](https://en.wikipedia.org/wiki/Penman%E2%80%93Monteith_equation)
+  [^4]: [Pyeto](https://pyeto.readthedocs.io/en/latest/)
+  [^5]: [Pyet](https://pyet.readthedocs.io/en/latest/)
   [^7]: [Discomfort_Index](https://www.jeeng.net/pdf-144092-70092?filename=Heat+Stress+Analysis.pdf)
   [^8]: [Soilmoisture](https://www.uni-trier.de/fileadmin/fb6/prof/PHY/Diverse_Bildmaterialien/Homepage/Personen/Casper_Markus/Understanding_the_water_balance_and_its_estimation_methods.pdf?utm_source=chatgpt.com)
   [^9]: [Soil_Moisture 1](https://en.wikipedia.org/wiki/Thornthwaite_climate_classification)
-   [^10]: Για το PET κάθε ποικιλίας ροδάκινων και για την καταλληλότητα κάθε ποικιλίας σχετικά με τη σπόρα και το ψεκασμό οι τιμές αντλήθηκαν μέσω CHATGPT
-
+  [^10]: (Για το PET κάθε ποικιλίας ροδάκινων και για την καταλληλότητα κάθε ποικιλίας σχετικά με τη σπόρα και το ψεκασμό οι τιμές αντλήθηκαν μέσω CHATGPT)
+  [^11]: (Για τη σπορά και το ψεκασμό σχετικά με τη καταλληλότητα οι τιμές αντλήθηκαν μέσω CHATGPT)
