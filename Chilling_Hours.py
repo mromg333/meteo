@@ -27,18 +27,17 @@ df['Hour'] = df['Date'].dt.floor('h')
 
 hourly_avg_temp = df.groupby('Hour')['Temperature'].mean()
 hourly_avg_temp = hourly_avg_temp.dropna()
-print(f"Αγνοήθηκαν {hourly_avg_temp.isna().sum()} NaN τιμές στη μέση ωριαία θερμοκρασία.")
 
-
+# Υπολογισμός ωρών ψύχους
 chilling_hours = hourly_avg_temp.apply(lambda x: 1 if 0 <= x <= 7.2 else 0)
 chilling_hours = chilling_hours.to_frame(name='Chilling_Hour')
 chilling_hours['Date'] = chilling_hours.index
-
 chilling_hours['Month'] = chilling_hours['Date'].dt.month
 chilling_hours_monthly = chilling_hours.groupby('Month')['Chilling_Hour'].sum()
 
+# Πρώτο γράφημα - Μηνιαίες ώρες ψύχους
 plt.figure(figsize=(10, 5))
-bars_month = plt.bar(chilling_hours_monthly.index, chilling_hours_monthly.values, color='teal')
+bars_month = plt.bar(chilling_hours_monthly.index, chilling_hours_monthly.values, color='teal', zorder=3)
 
 for bar in bars_month:
     height = bar.get_height()
@@ -48,27 +47,25 @@ for bar in bars_month:
                  textcoords="offset points",
                  ha='center', va='bottom', fontsize=9)
 
-plt.xlabel("Μήνας")
 plt.ylabel("Συνολικές Ώρες Ψύχους")
 plt.title("Ώρες Ψύχους Ανά Μήνα (Σύνολο για όλα τα έτη)")
 plt.xticks(range(1, 13), ["Ιαν", "Φεβ", "Μαρ", "Απρ", "Μάι", "Ιουν", "Ιουλ", "Αυγ", "Σεπ", "Οκτ", "Νοε", "Δεκ"])
-plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.grid(axis='y', linestyle='--', alpha=0.7, zorder=0)
 plt.tight_layout()
 plt.show()
 
+
+
+# Δεύτερο γράφημα - Ώρες ψύχους ανά σεζόν
 def assign_season_year(date):
-    if date.month >= 9:
-        return f"{date.year}-{date.year + 1}"
-    else:
-        return f"{date.year - 1}-{date.year}"
+    return f"{date.year}-{date.year + 1}" if date.month >= 9 else f"{date.year - 1}-{date.year}"
 
 chilling_hours['Season'] = chilling_hours['Date'].apply(assign_season_year)
 chilling_hours_by_season = chilling_hours.groupby('Season')['Chilling_Hour'].sum()
 chilling_hours_by_season = chilling_hours_by_season[chilling_hours_by_season >= 500]
 
-
 plt.figure(figsize=(8, 5))
-bars_season = plt.bar(chilling_hours_by_season.index, chilling_hours_by_season.values, color='blue')
+bars_season = plt.bar(chilling_hours_by_season.index, chilling_hours_by_season.values, color='teal', zorder=3)
 
 for bar in bars_season:
     height = bar.get_height()
@@ -76,33 +73,36 @@ for bar in bars_season:
                  xy=(bar.get_x() + bar.get_width() / 2, height),
                  xytext=(0, 3),
                  textcoords="offset points",
-                 ha='center', va='bottom', fontsize=9)
+                 ha='center', va='bottom',
+                 fontsize=9,
+                 color='black',
+                 zorder=5)
 
-
+# Γραμμές & ετικέτες απαιτήσεων ψύχους (πιο έντονες)
 vars = {
     "Maria Bianca": 908,
     "Lolita": 559,
     "Plagold10": 446
 }
 
+x_text_position = len(chilling_hours_by_season.index) - 0.65
 
-for name, chill_req in vars.items():
-    plt.axhline(y=chill_req, linestyle='--', linewidth=1.2, color='black')
+for i, (name, chill_req) in enumerate(vars.items()):
+    plt.axhline(y=chill_req, linestyle='--', linewidth=1.75, color='black', zorder=4)
     plt.text(
-        x=len(chilling_hours_by_season.index) - 0.5,
-        y=chill_req + 10,
+        x=x_text_position,
+        y=chill_req + 15 + (i * 25),
         s=f"{name}: {chill_req} ώρες",
         color='black',
-        fontsize=9,
+        fontsize=10,
         ha='right',
         va='bottom',
-        alpha=0.7
+        zorder=5
     )
 
-plt.xlabel("Σύνολο Ώρων Ψύχους για κάθε Χειμερινή Περίοδο ")
 plt.ylabel("Συνολικές Ώρες Ψύχους")
 plt.xticks(rotation=45)
-plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.grid(axis='y', linestyle='--', alpha=0.7, zorder=0)
 plt.title("Χειμερινoί Περίοδοι")
 plt.tight_layout()
 plt.show()
