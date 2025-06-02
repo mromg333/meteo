@@ -231,5 +231,5 @@ $$
  [^5]: [Soil_Moisture 2](http://www.gaiapedia.gr/gaiapedia/index.php/%CE%A5%CE%B3%CF%81%CE%B1%CF%83%CE%AF%CE%B1_%CE%B5%CE%B4%CE%AC%CF%86%CE%BF%CF%85%CF%82)
  [^6]: [Growing-Spraying Requirements](https://extension.usu.edu/yardandgarden/research/peaches-in-the-garden)
   [^7]: [Discomfort_Index](https://www.jeeng.net/pdf-144092-70092?filename=Heat+Stress+Analysis.pdf)
-  [^8]: [Soilmoisture] (https://www.uni-trier.de/fileadmin/fb6/prof/PHY/Diverse_Bildmaterialien/Homepage/Personen/Casper_Markus/Understanding_the_water_balance_and_its_estimation_methods.pdf?utm_source=chatgpt.com)
+  [^8]: [Soilmoisture](https://www.uni-trier.de/fileadmin/fb6/prof/PHY/Diverse_Bildmaterialien/Homepage/Personen/Casper_Markus/Understanding_the_water_balance_and_its_estimation_methods.pdf?utm_source=chatgpt.com)
 
