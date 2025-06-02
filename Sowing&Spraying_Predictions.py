@@ -3,6 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import sys
+import pyeto
+LATITUDE = 39.64
+
 
 sys.stdout.reconfigure(encoding='utf-8')
 
@@ -23,20 +26,59 @@ df['Temperature'] = pd.to_numeric(df['Temperature'], errors='coerce')
 df['Wind_Speed'] = pd.to_numeric(df['Wind_Speed'], errors='coerce')
 df = df.dropna(subset=['Temperature', 'Wind_Speed'])
 
-def calculate_soil_moisture(df):
-    soil_moisture = np.full(len(df), 50.0)
-    for i in range(1, len(df)):
-        rain = df.at[i-1, "Rain[mm]"]
-        temp = df.at[i-1, "Temperature"]
-        wind = df.at[i-1, "Wind_Speed"]
-        hum = df.at[i-1, "Hum_Out[%]"]
-        if rain > 0:
-            soil_moisture[i] = min(100, soil_moisture[i-1] + rain * 3)
+def compute_pet_pyeto(row):
+    try:
+        tmean = row['Temperature']
+        tmax = row['Max_Temperature']
+        tmin = row['Min_Temperature']
+        rh_mean = row['Humidity']
+        wind = max(row['Wind_Speed'], 0.1)
+        pressure = max(row['Pressure'] / 10.0, 9.0)
+        doy = row['DOY']
+        temp_diff = max(tmax - tmin, 0.1)
+
+        delta = max(pyeto.delta_svp(tmean), 1e-6)
+        psy = max(pyeto.psy_const(pressure), 1e-6)
+
+        lat_rad = pyeto.deg2rad(LATITUDE)
+        dr = 1 + 0.033 * np.cos(2 * np.pi / 365 * doy)
+        solar_decl = 0.409 * np.sin(2 * np.pi / 365 * doy - 1.39)
+        ws = np.arccos(-np.tan(lat_rad) * np.tan(solar_decl))
+        ra = (24 * 60 / np.pi) * 0.0820 * dr * (
+        ws * np.sin(lat_rad) * np.sin(solar_decl) +
+        np.cos(lat_rad) * np.cos(solar_decl) * np.sin(ws)
+        )
+
+        if pd.notnull(row['Solar_Rad']) and row['Solar_Rad'] > 0:
+            rs = float(row['Solar_Rad']) * 0.0864
         else:
-            decay = soil_moisture[i-1] * (0.98 - 0.08 * temp - 0.04 * wind + 0.03 * hum)
-            soil_moisture[i] = max(5, min(100, decay))
-    df["Soil_Moisture"] = soil_moisture
+            rs = 0.16 * np.sqrt(temp_diff) * ra
+
+        rs = row['Solar_Rad'] * 0.0864 if pd.notnull(row['Solar_Rad']) and row['Solar_Rad'] > 0 else 0.16 * np.sqrt(temp_diff) * ra
+        rns = pyeto.net_in_sol_rad(rs)
+        es_tmax = pyeto.svp_from_t(tmax)
+        es_tmin = pyeto.svp_from_t(tmin)
+        es = (es_tmax + es_tmin) / 2
+        ea = pyeto.avp_from_rhmean(es_tmin, es_tmax, rh_mean)
+        rnl = pyeto.net_out_lw_rad(tmin, tmax, rs, ra, ea)
+        rn = pyeto.net_rad(rns, rnl)
+
+        return pyeto.fao56_penman_monteith(rn, tmean, wind, es, ea, delta, psy)
+
+    except Exception as e:
+        return np.nan
+    
+def calculate_soil_moisture(df):
+   
+    df['PET'] = df.apply(compute_pet_pyeto, axis=1)
+    
+
+
+
+    df['Soil_Moisture'] = np.maximum(df['Rain[mm]'] - df['PET'], 0) # Prevents negative values
+    
     return df
+
 
 df = calculate_soil_moisture(df)
 
@@ -176,6 +218,7 @@ def plot_conditions(variety_results, condition_type):
     ax.legend(handles=legend_patches, loc='lower right', facecolor='#1e1e1e', labelcolor='white')
 
     plt.tight_layout()
+    plt.show()
     plt.savefig(f"{condition_type}_pred.png", dpi=300)
     plt.close()
 
