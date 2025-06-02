@@ -232,4 +232,6 @@ $$
  [^6]: [Growing-Spraying Requirements](https://extension.usu.edu/yardandgarden/research/peaches-in-the-garden)
   [^7]: [Discomfort_Index](https://www.jeeng.net/pdf-144092-70092?filename=Heat+Stress+Analysis.pdf)
   [^8]: [Soilmoisture](https://www.uni-trier.de/fileadmin/fb6/prof/PHY/Diverse_Bildmaterialien/Homepage/Personen/Casper_Markus/Understanding_the_water_balance_and_its_estimation_methods.pdf?utm_source=chatgpt.com)
+  [^9]
+   [^10]
 
